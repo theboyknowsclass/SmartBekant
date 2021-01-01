@@ -4,4 +4,4 @@ ENTRYPOINT []
 RUN apt-get update && \
     apt-get -qy install curl ca-certificates
 
-CMD ["curl", "https://docker.com"]
+CMD ["curl", "-SL", "https://docker.com"]
