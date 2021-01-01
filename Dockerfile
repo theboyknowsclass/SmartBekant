@@ -1,4 +1,4 @@
-FROM balenalib/rpi-python:latest-run
+FROM balenalib/rpi-debian:buster-run
 ENTRYPOINT []
 
 RUN apt-get update && \
