@@ -9,6 +9,9 @@ setup(name='smartbekant',
       license='GPLv3+',
       packages=['smartbekant'],
       install_requires=[
-          'keybow', 'python3-gpiozero'
+          'keybow', 
+          'python3-gpiozero',
+          'adafruit-blinka',
+          'adafruit-circuitpython-ht16k33'
       ],
       zip_safe=False)
