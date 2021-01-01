@@ -8,4 +8,7 @@ setup(name='smartbekant',
       author_email='g@theboyknowsclass.com',
       license='GPLv3+',
       packages=['smartbekant'],
+      install_requires=[
+          'keybow', 'python3-gpiozero'
+      ],
       zip_safe=False)
