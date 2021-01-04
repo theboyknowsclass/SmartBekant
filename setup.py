@@ -12,6 +12,7 @@ setup(name='smartbekant',
           'keybow', 
           'python3-gpiozero',
           'adafruit-blinka',
-          'adafruit-circuitpython-ht16k33'
+          'adafruit-circuitpython-ht16k33',
+          'zope.event'
       ],
       zip_safe=False)
