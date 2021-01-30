@@ -2,52 +2,50 @@ from .buzzer.BuzzerController import BuzzerController
 from .desk_driver.DeskDriverProxy import DeskDriverProxy
 from .display.DisplayProxy import DisplayProxy
 from .distance_sensor.DistanceSensorProxy import DistanceSensorProxy
+from .keybow.KeybowProxy import KeybowProxy
+from .data.ConfigurationManager import ConfigurationManager
+from .data.MemoryManager import MemoryManager
 import time
+import zope.event
 
-buzzer_gpio = 27
+class SmartBekant():
+     def __init__(self, height_tolerance = 1.0, polling_interval = 0.1):
+        self.height_tolerance = height_tolerance
+        self.polling_interval = polling_interval
+        self.config = ConfigurationManager()
+        self.buzzer = BuzzerController(self.config.buzzer_gpio)
+        self.desk_driver = DeskDriverProxy(self.config.up_gpio, self.config.down_gpio)
+        self.display = DisplayProxy(self.config.display_clock_gpio, self.config.display_data_gpio)
+        self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin, self.config.distance_sensor_trigger_pin)
+        self.memory_manager = MemoryManager()
 
-up_gpio = 1
-down_gpio = 2
+    def set_height(self, height: float):
+        current_height = self.height_sensor.get_distance()
+        if abs(current_height-height) < self.height_tolerance:
+            return
+        elif current_height > height:
+            self.desk_driver.down()
+            while current_height > height:
+                current_height = self.height_sensor.get_distance()
+                self.display.show(current_height)
+                time.sleep(self.polling_interval)
+            self.desk_driver.stop()
+        else:
+            self.desk_driver.up()
+            while current_height < height:
+                current_height = self.height_sensor.get_distance()
+                self.display.show(current_height)
+                time.sleep(self.polling_interval)
+            self.desk_driver.stop()
 
-display_clock_gpio = 3
-display_data_gpio = 2
-
-distance_sensor_echo_pin = 15
-distance_sensor_trigger_pin = 14
-
-height_tolerance = 1.0
-polling_interval = 0.1
-
-buzzer = BuzzerController(buzzer_gpio)
-desk_driver = DeskDriverProxy(up_gpio, down_gpio)
-display = DisplayProxy(display_clock_gpio, display_data_gpio)
-height_sensor = DistanceSensorProxy(distance_sensor_echo_pin, distance_sensor_trigger_pin)
-
-
-def set_height(height: float):
-    current_height = height_sensor.get_distance()
-
-    if abs(current_height-height) < height_tolerance:
+    def set_height_from_memory(self, memory_location: int):
+        self.buzzer.short_beep(memory_location)
+        target_height = self.memory_manager.get_memory(memory_location)
+        self.set_height(target_height)
         return
-    elif current_height > height:
-        desk_driver.down()
-        while current_height > height:
-            current_height = height_sensor.get_distance()
-            display.show(current_height)
-            time.sleep(polling_interval)
-        desk_driver.stop()
-    else:
-        desk_driver.up()
-        while current_height < height:
-            current_height = height_sensor.get_distance()
-            display.show(current_height)
-            time.sleep(polling_interval)
-        desk_driver.stop()
 
-def set_height_from_memory(memory_location: int):
-    buzzer.short_beep(memory_location)
-    return
-
-def update_memory(memory_location: int):
-    buzzer.long_beep()
-    return
+    def update_memory(self, memory_location: int):
+        self.buzzer.long_beep()        
+        current_height = self.height_sensor.get_distance()
+        self.memory_manager.set_memory(memory_location, current_height)
+        return
