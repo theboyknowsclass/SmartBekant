@@ -1,9 +1,9 @@
 import threading 
-from KeyBowEvent import KeyBowEvent
+from .KeyBowEvent import KeyBowEvent
 import zope.event
 
 class KeybowProxy:
-    def __init__(self, background = [0, 0, 0], up_colour = [0, 255, 0], down_colour = [255, 0, 0], memory_colour = [0, 0, 255]):
+    def __init__(self, background = [255, 100, 100], up_colour = [0, 255, 0], down_colour = [255, 0, 0], memory_colour = [0, 0, 255]):
         self.background = background
         self.up_colour = up_colour
         self.down_colour = down_colour

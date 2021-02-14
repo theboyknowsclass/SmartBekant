@@ -1,8 +1,16 @@
-from .keybow.KeybowProxy import KeybowProxy
+from keyboard.KeybowProxy import KeybowProxy
+from SmartBekant import SmartBekant
 import keybow
 
 keybow_proxy = KeybowProxy()
 keybow.setup(keybow.MINI)
+r, g, b = keybow_proxy.background
+keybow.set_led(0, r, g, b)
+keybow.set_led(1, r, g, b)
+keybow.set_led(2, r, g, b)
+keybow.show()
+
+smartBekant = SmartBekant()
 
 @keybow.on(index=0)
 def handle_key(index, state):
