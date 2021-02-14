@@ -1,4 +1,5 @@
 import time
+import math
 
 import zope.event
 
@@ -18,7 +19,7 @@ class SmartBekant():
         buzzer_proxy = BuzzerProxy(self.config.buzzer_gpio)
         self.buzzer = BuzzerController(buzzer_proxy)
         self.desk_driver = DeskDriverProxy(self.config.up_gpio, self.config.down_gpio)
-        self.display = DisplayProxy(self.config.display_clock_gpio, self.config.display_data_gpio)
+        self.display = DisplayProxy(3, 2)
         self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin, self.config.distance_sensor_trigger_pin)
         self.memory_manager = MemoryManager()
 
@@ -52,3 +53,11 @@ class SmartBekant():
         current_height = self.height_sensor.get_distance()
         self.memory_manager.set_memory(memory_location, current_height)
         return
+
+    def start(self):
+        while True: 
+            distance = self.height_sensor.get_distance()
+            distanceString = str(distance)
+            self.display.show(222.2)
+            print(f'distance: {distanceString}')
+            time.sleep(0.3)

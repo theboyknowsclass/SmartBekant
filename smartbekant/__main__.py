@@ -10,7 +10,7 @@ keybow.set_led(1, r, g, b)
 keybow.set_led(2, r, g, b)
 keybow.show()
 
-smartBekant = SmartBekant()
+smart_bekant = SmartBekant()
 
 @keybow.on(index=0)
 def handle_key(index, state):
@@ -49,3 +49,5 @@ def handle_key(index, state):
         r, g, b = keybow_proxy.background
         keybow.set_led(index, r, g, b)
         keybow.show()
+
+smart_bekant.start()

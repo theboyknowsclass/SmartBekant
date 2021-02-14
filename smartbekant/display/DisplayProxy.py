@@ -9,11 +9,13 @@ class DisplayProxy:
         self.__display__.fill(0)
 
     def show(self, value: float):
-        value_tuple = math.modf(value)
-        string = str(int(value_tuple[1])).zfill(3) + '.{:.0f}'.format(value_tuple[0])
+        string = str(round(value,1))
+        print(string)
         self.__display__.print(string)
         self.__display__.show()
 
 
-
-
+if __name__ == "__main__":
+    print(__name__)
+    display = DisplayProxy(3, 2)
+    display.show(222.2)
