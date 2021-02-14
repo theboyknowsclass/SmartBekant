@@ -2,8 +2,8 @@ import time
 from .BuzzerProxy import BuzzerProxy
 
 class BuzzerController:
-    def __init__(self, buzzerGpio: int):
-        self.__bz__ = BuzzerProxy(buzzerGpio)
+    def __init__(self, buzzer: BuzzerProxy):
+        self.__bz__ = buzzer
         self.__bz__.off()
 
     def short_beep(self, times: int):
