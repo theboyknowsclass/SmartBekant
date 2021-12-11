@@ -57,5 +57,4 @@ class SmartBekant:
         while True:
             distance = self.height_sensor.get_distance()
             self.display.show(distance)
-            distance_string = str(distance)
             time.sleep(0.3)
