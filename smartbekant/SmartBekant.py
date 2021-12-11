@@ -1,18 +1,17 @@
 import time
-import math
 
-import zope.event
-
-from buzzer.BuzzerController import BuzzerController
 from buzzer.BuzzerProxy import BuzzerProxy
+
+from buzzer.buzzer import BuzzerController
+from data.ConfigurationManager import ConfigurationManager
+from data.MemoryManager import MemoryManager
 from desk_driver.DeskDriverProxy import DeskDriverProxy
 from display.DisplayProxy import DisplayProxy
 from distance_sensor.DistanceSensorProxy import DistanceSensorProxy
-from data.ConfigurationManager import ConfigurationManager
-from data.MemoryManager import MemoryManager
+
 
 class SmartBekant():
-    def __init__(self, height_tolerance = 1.0, polling_interval = 0.1):
+    def __init__(self, height_tolerance=1.0, polling_interval=0.1):
         self.height_tolerance = height_tolerance
         self.polling_interval = polling_interval
         self.config = ConfigurationManager()
@@ -20,12 +19,13 @@ class SmartBekant():
         self.buzzer = BuzzerController(buzzer_proxy)
         self.desk_driver = DeskDriverProxy(self.config.up_gpio, self.config.down_gpio)
         self.display = DisplayProxy(3, 2)
-        self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin, self.config.distance_sensor_trigger_pin)
+        self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin,
+                                                 self.config.distance_sensor_trigger_pin)
         self.memory_manager = MemoryManager()
 
     def set_height(self, height: float):
         current_height = self.height_sensor.get_distance()
-        if abs(current_height-height) < self.height_tolerance:
+        if abs(current_height - height) < self.height_tolerance:
             return
         elif current_height > height:
             self.desk_driver.down()
@@ -49,13 +49,13 @@ class SmartBekant():
         return
 
     def update_memory(self, memory_location: int):
-        self.buzzer.long_beep()        
+        self.buzzer.long_beep()
         current_height = self.height_sensor.get_distance()
         self.memory_manager.set_memory(memory_location, current_height)
         return
 
     def start(self):
-        while True: 
+        while True:
             distance = self.height_sensor.get_distance()
             distanceString = str(distance)
             self.display.show(222.2)

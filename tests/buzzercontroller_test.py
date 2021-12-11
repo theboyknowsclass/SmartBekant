@@ -1,8 +1,7 @@
 import time
-from smartbekant.buzzer import BuzzerController
 from unittest.mock import Mock
 
-
+from smartbekant.buzzer import buzzer
 
 
 def func(x):
@@ -11,7 +10,7 @@ def func(x):
 
 def test_long_beep():
     mock = Mock()
-    buzzer_controller = BuzzerController(mock)
+    buzzer_controller = buzzer(mock)
     buzzer_controller.long_beep()
     time.sleep(0.3)
     mock.on.assert_called_once()

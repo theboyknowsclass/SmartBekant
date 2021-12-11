@@ -9,8 +9,8 @@ setup(name='smartbekant',
       license='GPLv3+',
       packages=['smartbekant'],
       install_requires=[
-          'keybow', 
-          'python3-gpiozero',
+          'keybow',
+          'gpiozero',
           'adafruit-blinka',
           'adafruit-circuitpython-ht16k33',
           'zope.event'
