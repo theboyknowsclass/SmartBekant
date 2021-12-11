@@ -3,9 +3,9 @@ import time
 from gpiozero import Buzzer
 
 
-class Buzzer:
-    def __init__(self, buzzer: Buzzer):
-        self.__bz__ = buzzer
+class BuzzerController:
+    def __init__(self, gpio: int):
+        self.__bz__ = Buzzer(gpio)
         self.__bz__.off()
 
     def short_beep(self, times: int):
@@ -21,3 +21,9 @@ class Buzzer:
         self.__bz__.on()
         time.sleep(0.3)
         self.__bz__.off()
+
+
+if __name__ == "__main__":
+    print(__name__)
+    buzzer = BuzzerController(26)
+    buzzer.short_beep(3)

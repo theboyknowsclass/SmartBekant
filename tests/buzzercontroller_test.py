@@ -1,8 +1,6 @@
 import time
 from unittest.mock import Mock
 
-from smartbekant.buzzer import buzzer
-
 
 def func(x):
     return x + 1

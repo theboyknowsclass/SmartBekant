@@ -1,7 +1,7 @@
 class MemoryManager:
     def __init__(self):
         self.something = "something"
-        
+
     def get_memory(self, index: int):
         self.something = "something"
 

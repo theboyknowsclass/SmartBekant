@@ -1,24 +1,22 @@
 import time
 
-from buzzer.BuzzerProxy import BuzzerProxy
-
-from buzzer.buzzer import BuzzerController
-from data.ConfigurationManager import ConfigurationManager
-from data.MemoryManager import MemoryManager
-from desk_driver.DeskDriverProxy import DeskDriverProxy
-from display.DisplayProxy import DisplayProxy
-from distance_sensor.DistanceSensorProxy import DistanceSensorProxy
+from smartbekant.buzzer.BuzzerController import BuzzerController
+from smartbekant.data.ConfigurationManager import ConfigurationManager
+from smartbekant.data.MemoryManager import MemoryManager
+from smartbekant.desk_driver.DeskDriverProxy import DeskDriverProxy
+from smartbekant.display.DisplayController import DisplayController
+from smartbekant.distance_sensor.DistanceSensorProxy import DistanceSensorProxy
 
 
-class SmartBekant():
+class SmartBekant:
     def __init__(self, height_tolerance=1.0, polling_interval=0.1):
         self.height_tolerance = height_tolerance
         self.polling_interval = polling_interval
+
         self.config = ConfigurationManager()
-        buzzer_proxy = BuzzerProxy(self.config.buzzer_gpio)
-        self.buzzer = BuzzerController(buzzer_proxy)
+        self.buzzer = BuzzerController(self.config.buzzer_gpio)
         self.desk_driver = DeskDriverProxy(self.config.up_gpio, self.config.down_gpio)
-        self.display = DisplayProxy(3, 2)
+        self.display = DisplayController(self.config.display_clock_gpio, self.config.display_data_gpio)
         self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin,
                                                  self.config.distance_sensor_trigger_pin)
         self.memory_manager = MemoryManager()
@@ -55,9 +53,9 @@ class SmartBekant():
         return
 
     def start(self):
+        self.buzzer.short_beep(3)
         while True:
             distance = self.height_sensor.get_distance()
-            distanceString = str(distance)
-            self.display.show(222.2)
-            print(f'distance: {distanceString}')
+            self.display.show(distance)
+            distance_string = str(distance)
             time.sleep(0.3)
