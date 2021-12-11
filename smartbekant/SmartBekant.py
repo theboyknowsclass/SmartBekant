@@ -1,11 +1,15 @@
 import time
 
+import zope.event.classhandler
+
 from smartbekant.buzzer.BuzzerController import BuzzerController
 from smartbekant.data.ConfigurationManager import ConfigurationManager
 from smartbekant.data.MemoryManager import MemoryManager
 from smartbekant.desk_driver.DeskDriverProxy import DeskDriverProxy
 from smartbekant.display.DisplayController import DisplayController
 from smartbekant.distance_sensor.DistanceSensorProxy import DistanceSensorProxy
+from smartbekant.keyboard.ClickEvent import ClickEvent
+from smartbekant.keyboard.ClickManager import ClickManager
 
 
 class SmartBekant:
@@ -20,6 +24,17 @@ class SmartBekant:
         self.height_sensor = DistanceSensorProxy(self.config.distance_sensor_echo_pin,
                                                  self.config.distance_sensor_trigger_pin)
         self.memory_manager = MemoryManager()
+        self.click_manager = ClickManager(verbose=True)
+
+        zope.event.classhandler.handler(ClickEvent, self.handle_click_event)
+
+    def handle_click_event(self, click_event: ClickEvent):
+        print(f'Click Event Received')
+        if click_event.long_press:
+            self.buzzer.short_beep(click_event.click_count - 1)
+            self.buzzer.long_beep()
+        else:
+            self.buzzer.short_beep(click_event.click_count)
 
     def set_height(self, height: float):
         current_height = self.height_sensor.get_distance()

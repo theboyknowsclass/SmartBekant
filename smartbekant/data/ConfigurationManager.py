@@ -1,6 +1,6 @@
 class ConfigurationManager:
     def __init__(self):
-        self.buzzer_gpio = 27
+        self.buzzer_gpio = 26
         self.up_gpio = 16
         self.down_gpio = 18
         self.display_clock_gpio = 3
